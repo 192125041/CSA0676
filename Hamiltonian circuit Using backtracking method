@@ -1,0 +1,36 @@
+#include <stdio.h>
+#define MAX_VERTICES 10
+void printHamiltonianCircuit(int graph[MAX_VERTICES][MAX_VERTICES], int path[], int pos, int numVertices) {
+    if (pos == numVertices) {
+        if (graph[path[pos - 1]][path[0]] == 1) {
+            for (int i = 0; i < numVertices; i++) {
+                printf("%d ", path[i]);}
+            printf("%d\n", path[0]);}
+        return;}
+    for (int v = 1; v < numVertices; v++) {
+        if (graph[path[pos - 1]][v] == 1) {
+            int isAlreadyVisited = 0;
+            for (int i = 0; i < pos; i++) {
+                if (path[i] == v) {
+                    isAlreadyVisited = 1;
+                    break; } }
+            if (!isAlreadyVisited) {
+                path[pos] = v;
+                printHamiltonianCircuit(graph, path, pos + 1, numVertices);
+                path[pos] = -1;}}}}
+void findHamiltonianCircuit(int graph[MAX_VERTICES][MAX_VERTICES], int numVertices) {
+    int path[MAX_VERTICES];
+    for (int i = 0; i < numVertices; i++) {
+        path[i] = -1; }
+    path[0] = 0; 
+    printHamiltonianCircuit(graph, path, 1, numVertices);}
+int main() {
+    int numVertices = 5;
+    int adjacencyMatrix[MAX_VERTICES][MAX_VERTICES] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 1, 1},
+        {0, 1, 0, 0, 1},
+        {1, 1, 0, 0, 1},
+        {0, 1, 1, 1, 0}  };
+    findHamiltonianCircuit(adjacencyMatrix, numVertices);
+    return 0;}
