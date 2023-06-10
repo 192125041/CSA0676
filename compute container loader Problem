@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+#define MAX_CONTAINERS 10
+
+// Function to calculate the total weight of the containers loaded in a truck
+int calculateTotalWeight(int containers[], int numContainers) {
+    int totalWeight = 0;
+    for (int i = 0; i < numContainers; i++) {
+        totalWeight += containers[i];
+    }
+    return totalWeight;
+}
+
+// Recursive function to find the maximum weight that can be loaded in the truck
+int findMaxWeight(int weights[], int numContainers, int maxWeight, int index) {
+    if (index >= numContainers || maxWeight <= 0) {
+        return 0;
+    }
+    
+    // If the weight of the current container is more than the remaining capacity, skip it
+    if (weights[index] > maxWeight) {
+        return findMaxWeight(weights, numContainers, maxWeight, index + 1);
+    }
+    
+    // Calculate the maximum weight by including and excluding the current container
+    int includeWeight = weights[index] + findMaxWeight(weights, numContainers, maxWeight - weights[index], index + 1);
+    int excludeWeight = findMaxWeight(weights, numContainers, maxWeight, index + 1);
+    
+    // Return the maximum of the two weights
+    return (includeWeight > excludeWeight) ? includeWeight : excludeWeight;
+}
+
+int main() {
+    int numContainers;
+    int containerWeights[MAX_CONTAINERS];
+    int maxWeight;
+    
+    printf("Enter the number of containers: ");
+    scanf("%d", &numContainers);
+    
+    printf("Enter the weights of the containers:\n");
+    for (int i = 0; i < numContainers; i++) {
+        scanf("%d", &containerWeights[i]);
+    }
+    
+    printf("Enter the maximum weight the truck can carry: ");
+    scanf("%d", &maxWeight);
+    
+    int maxLoadedWeight = findMaxWeight(containerWeights, numContainers, maxWeight, 0);
+    
+    printf("The maximum weight that can be loaded in the truck is: %d\n", maxLoadedWeight);
+    
+    return 0;
+}
